@@ -136,7 +136,132 @@ INSERT INTO transactions (transaction_id, customer_id, product_id, sale_date, am
 VALUES (3010, 1005, 2005, DATE '2025-05-20', 32000);
 
 
+
 ```
+
+## Window functions
+
+# 1. Ranking: ROW_NUMBER(), RANK(), DENSE_RANK(), PERCENT_RANK()
+```sql
+-- Ranking functions: Top N customers by revenue
+SELECT 
+    c.name AS customer_name,
+    SUM(t.amount) AS total_revenue,
+
+    -- Assigns a unique row number (no ties)
+    ROW_NUMBER() OVER (ORDER BY SUM(t.amount) DESC) AS row_num,
+
+    -- Standard ranking (ties leave gaps, e.g. 1, 2, 2, 4)
+    RANK() OVER (ORDER BY SUM(t.amount) DESC) AS rank_pos,
+
+    -- Dense rank (ties don't leave gaps, e.g. 1, 2, 2, 3)
+    DENSE_RANK() OVER (ORDER BY SUM(t.amount) DESC) AS dense_rank_pos,
+
+    -- Percent rank (relative position between 0 and 1)
+    PERCENT_RANK() OVER (ORDER BY SUM(t.amount) DESC) AS percent_rank_pos
+
+FROM transactions t
+JOIN customers c ON t.customer_id = c.customer_id
+GROUP BY c.name
+ORDER BY total_revenue DESC;
+
+
+```
+
+# 2. Aggregate: SUM(), AVG(), MIN()
+```sql
+-- Aggregate window functions: Running totals & trends
+SELECT 
+    t.transaction_id,
+    t.sale_date,
+    t.amount,
+
+    -- Running total of sales (ROWS: physical row count)
+    SUM(t.amount) OVER (
+        ORDER BY t.sale_date 
+        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS running_total_rows,
+
+    -- Running average (RANGE: considers values within a logical range of dates)
+    AVG(t.amount) OVER (
+        ORDER BY t.sale_date 
+        ROWS BETWEEN 2 PRECEDING AND CURRENT ROW
+    ) AS moving_avg_rows,
+
+    -- Running minimum
+    MIN(t.amount) OVER (
+        ORDER BY t.sale_date 
+        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS running_min,
+
+    -- Running maximum
+    MAX(t.amount) OVER (
+        ORDER BY t.sale_date 
+        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS running_max
+
+FROM transactions t
+ORDER BY t.sale_date;
+
+
+
+```
+# 3. Navigation: LAG(), LEAD()
+```sql
+-- Navigation window functions: Month-to-month analysis
+WITH monthly_sales AS (
+    SELECT 
+        FORMAT(t.sale_date, 'yyyy-MM') AS month,
+        SUM(t.amount) AS total_sales
+    FROM transactions t
+    GROUP BY FORMAT(t.sale_date, 'yyyy-MM')
+)
+SELECT 
+    month,
+    total_sales,
+
+    -- Previous month's sales
+    LAG(total_sales, 1) OVER (ORDER BY month) AS prev_month_sales,
+
+    -- Next month's sales
+    LEAD(total_sales, 1) OVER (ORDER BY month) AS next_month_sales,
+
+    -- Growth % compared to previous month
+    ROUND(
+        CASE 
+            WHEN LAG(total_sales, 1) OVER (ORDER BY month) = 0 THEN NULL
+            ELSE ( (total_sales - LAG(total_sales, 1) OVER (ORDER BY month)) * 100.0 / 
+                    LAG(total_sales, 1) OVER (ORDER BY month) )
+        END, 2
+    ) AS growth_percent
+FROM monthly_sales
+ORDER BY month;
+
+
+```
+# 4. Distribution: NTILE(4), CUME_DIST() 
+```sql
+-- Distribution window functions: Customer segmentation
+SELECT 
+    c.name AS customer_name,
+    SUM(t.amount) AS total_spent,
+
+    -- Divide customers into 4 quartiles (Q1 = top spenders)
+    NTILE(4) OVER (ORDER BY SUM(t.amount) DESC) AS spending_quartile,
+
+    -- Cumulative distribution (between 0 and 1)
+    CUME_DIST() OVER (ORDER BY SUM(t.amount) DESC) AS spending_cume_dist
+
+FROM customers c
+JOIN transactions t ON c.customer_id = t.customer_id
+GROUP BY c.name
+ORDER BY total_spent DESC;
+
+
+```
+
+
+
 
 
 
