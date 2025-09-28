@@ -39,6 +39,6 @@ This project demonstrates 5 measurable analytics goals:
 
 ### ER Diagram
 
-*(Insert diagram image here)*
+![](/images/ER_Diagram_Beverage_Distributor.png)
 
 
