@@ -52,7 +52,7 @@ CREATE TABLE customers (
 );
 
 ```
-![](/images/customer.png)
+![](/images/customer.PNG)
 
 ## 2. Create Products Table
 ```sql
