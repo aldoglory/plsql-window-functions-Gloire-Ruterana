@@ -52,6 +52,7 @@ CREATE TABLE customers (
 );
 
 ```
+![](/images/customer.png)
 
 ## 2. Create Products Table
 ```sql
@@ -64,6 +65,7 @@ CREATE TABLE products (
 
 
 ```
+![](/images/products.png)
 ## 3. Create Transactions Table
 ```sql
 -- Transactions table
@@ -79,6 +81,7 @@ CREATE TABLE transactions (
 
 
 ```
+![](/images/transactions.png)
 
 ### inserting sample data
 
