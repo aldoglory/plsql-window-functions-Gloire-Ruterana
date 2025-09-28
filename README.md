@@ -41,4 +41,44 @@ This project demonstrates 5 measurable analytics goals:
 
 ![](/images/ER_Diagram_Beverage_Distributor.png)
 
+### creating tables 
+## 1. Create Customers Table
+```sql
+-- Customers table
+CREATE TABLE customers (
+    customer_id INT PRIMARY KEY,
+    name VARCHAR2(100) NOT NULL,
+    region VARCHAR2(50) NOT NULL
+);
+
+```
+
+## 2. Create Products Table
+```sql
+-- Products table
+CREATE TABLE products (
+    product_id INT PRIMARY KEY,
+    product_name VARCHAR2(100) NOT NULL,
+    category VARCHAR2(50) NOT NULL
+);
+
+
+```
+## 3. Create Transactions Table
+```sql
+-- Transactions table
+CREATE TABLE transactions (
+    transaction_id INT PRIMARY KEY,
+    customer_id INT,
+    product_id INT,
+    sale_date DATE NOT NULL,
+    amount NUMBER(12,2) NOT NULL,
+    CONSTRAINT fk_customer FOREIGN KEY (customer_id) REFERENCES customers(customer_id),
+    CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES products(product_id)
+);
+
+
+```
+
+
 
