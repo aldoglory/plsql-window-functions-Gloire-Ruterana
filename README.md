@@ -167,6 +167,86 @@ VALUES (3010, 1005, 2005, DATE '2025-05-20', 32000);
 
 # 1. Ranking: ROW_NUMBER(), RANK(), DENSE_RANK(), PERCENT_RANK()
 
+# ROW_NUMBER()
+```sql
+-- ROW_NUMBER(): assigns a unique row number to each customer ordered by revenue
+SELECT 
+    c.name AS customer_name,
+    SUM(t.amount) AS total_revenue,
+    ROW_NUMBER() OVER (ORDER BY SUM(t.amount) DESC) AS row_num
+FROM customers c
+JOIN transactions t ON c.customer_id = t.customer_id
+GROUP BY c.name
+ORDER BY total_revenue DESC;
+
+```
+Every customer gets a unique sequential number.
+
+Even if two customers have the same revenue, they won’t share the same number.
+![](/images/rownbr().PNG)
+
+
+# 2. RANK()
+
+```sql
+-- RANK(): assigns ranks but leaves gaps if there are ties
+SELECT 
+    c.name AS customer_name,
+    SUM(t.amount) AS total_revenue,
+    RANK() OVER (ORDER BY SUM(t.amount) DESC) AS rank_pos
+FROM customers c
+JOIN transactions t ON c.customer_id = t.customer_id
+GROUP BY c.name
+ORDER BY total_revenue DESC;
+
+```
+
+![](/images/rank().PNG)
+Customers with equal revenue share the same rank.
+
+The next rank skips a number (e.g., 1, 2, 2, 4).
+
+# 3. DENSE_RANK()
+
+```sql
+-- DENSE_RANK(): assigns ranks without gaps when there are ties
+SELECT 
+    c.name AS customer_name,
+    SUM(t.amount) AS total_revenue,
+    DENSE_RANK() OVER (ORDER BY SUM(t.amount) DESC) AS dense_rank_pos
+FROM customers c
+JOIN transactions t ON c.customer_id = t.customer_id
+GROUP BY c.name
+ORDER BY total_revenue DESC;
+
+```
+
+![](/images/denserank().PNG)
+Customers with equal revenue share the same rank.
+
+The next rank is continuous (e.g., 1, 2, 2, 3).
+
+# 4. PERCENT_RANK()
+```sql
+-- PERCENT_RANK(): relative rank between 0 and 1
+SELECT 
+    c.name AS customer_name,
+    SUM(t.amount) AS total_revenue,
+    PERCENT_RANK() OVER (ORDER BY SUM(t.amount) DESC) AS percent_rank_pos
+FROM customers c
+JOIN transactions t ON c.customer_id = t.customer_id
+GROUP BY c.name
+ORDER BY total_revenue DESC;
+
+
+```
+![](/images/percentagerank().PNG)
+Returns a value between 0 and 1.
+
+0 = top customer, 1 = bottom customer.
+
+Useful for percentile-based segmentation.
+
 
 
 
