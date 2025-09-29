@@ -165,9 +165,9 @@ VALUES (3010, 1005, 2005, DATE '2025-05-20', 32000);
 
 ## Window functions
 
-# 1. Ranking: ROW_NUMBER(), RANK(), DENSE_RANK(), PERCENT_RANK()
+##  1. Ranking: ROW_NUMBER(), RANK(), DENSE_RANK(), PERCENT_RANK()
 
-# ROW_NUMBER()
+# 1 ROW_NUMBER()
 ```sql
 -- ROW_NUMBER(): assigns a unique row number to each customer ordered by revenue
 SELECT 
@@ -246,6 +246,128 @@ Returns a value between 0 and 1.
 0 = top customer, 1 = bottom customer.
 
 Useful for percentile-based segmentation.
+
+
+##  2. Aggregate
+
+# 1. SUM() – Running Total
+
+```sql
+-- Running total using ROWS
+SELECT 
+    transaction_id,
+    sale_date,
+    amount,
+    SUM(amount) OVER (
+        ORDER BY sale_date 
+        ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS running_total_rows
+FROM transactions
+ORDER BY sale_date;
+
+```
+![](/images/sum.PNG)
+
+Adds up sales progressively row by row (physical rows).
+
+
+# 2. AVG() – Moving Average
+
+```sql
+-- 3-row moving average (current + 2 previous)
+SELECT 
+    transaction_id,
+    sale_date,
+    amount,
+    AVG(amount) OVER (
+        ORDER BY sale_date 
+        ROWS BETWEEN 2 PRECEDING AND CURRENT ROW
+    ) AS moving_avg_rows
+FROM transactions
+ORDER BY sale_date;
+
+```
+![](/images/avg().PNG)
+
+Shows the average of the current and previous 2 rows (rolling trend).
+
+# 3. MIN() – Running Minimum
+
+```sql
+-- Running minimum using RANGE
+SELECT 
+    transaction_id,
+    sale_date,
+    amount,
+    MIN(amount) OVER (
+        ORDER BY sale_date 
+        RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS running_min
+FROM transactions
+ORDER BY sale_date;
+
+```
+![](/images/min().PNG)
+
+racks the lowest transaction amount up to the current row.
+
+# 4. MAX() – Running Maximum
+
+```sql
+-- Running maximum using RANGE
+SELECT 
+    transaction_id,
+    sale_date,
+    amount,
+    MAX(amount) OVER (
+        ORDER BY sale_date 
+        RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW
+    ) AS running_max
+FROM transactions
+ORDER BY sale_date;
+
+```
+![](/images/max.PNG)
+
+racks the highest transaction amount up to the current row.
+
+## 3. Navigation
+
+# 1. LAG() – Look at Previous Period
+```sql
+-- Previous month’s sales using LAG
+WITH monthly_sales AS (
+    SELECT 
+        FORMAT(sale_date, 'yyyy-MM') AS month,
+        SUM(amount) AS total_sales
+    FROM transactions
+    GROUP BY FORMAT(sale_date, 'yyyy-MM')
+)
+SELECT 
+    month,
+    total_sales,
+    LAG(total_sales, 1) OVER (ORDER BY month) AS prev_month_sales
+FROM monthly_sales
+ORDER BY month;
+
+
+```
+![](/images/lag().PNG)
+
+# 1. LAG() – Look at Previous Period
+```sql
+
+
+```
+![](/images/max.PNG)
+
+# 1. LAG() – Look at Previous Period
+```sql
+
+
+```
+![](/images/max.PNG)
+
 
 
 
