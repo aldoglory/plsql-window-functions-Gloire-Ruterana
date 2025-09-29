@@ -506,7 +506,10 @@ https://www.datacamp.com/tutorial/sql-window-functions
 Khan Academy. (2023). SQL: Window Functions Overview.
 https://www.khanacademy.org/computing/computer-programming/sql
 
-
+```
+All sources were properly cited. Implementations and analysis represent original work. No AI
+generated content was copied without attribution or adaptation.
+```
 
 
 
