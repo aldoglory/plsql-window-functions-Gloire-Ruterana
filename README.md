@@ -354,25 +354,126 @@ ORDER BY month;
 ```
 ![](/images/lag().PNG)
 
-# 1. LAG() – Look at Previous Period
+Adds a column showing the sales of the previous month.
+
+# 2. LEAD() – Look at Next Period
 ```sql
+-- Next month’s sales using LEAD
+WITH monthly_sales AS (
+    SELECT 
+        FORMAT(sale_date, 'yyyy-MM') AS month,
+        SUM(amount) AS total_sales
+    FROM transactions
+    GROUP BY FORMAT(sale_date, 'yyyy-MM')
+)
+SELECT 
+    month,
+    total_sales,
+    LEAD(total_sales, 1) OVER (ORDER BY month) AS next_month_sales
+FROM monthly_sales
+ORDER BY month;
+-- Next month’s sales using LEAD
+WITH monthly_sales AS (
+    SELECT 
+        FORMAT(sale_date, 'yyyy-MM') AS month,
+        SUM(amount) AS total_sales
+    FROM transactions
+    GROUP BY FORMAT(sale_date, 'yyyy-MM')
+)
+SELECT 
+    month,
+    total_sales,
+    LEAD(total_sales, 1) OVER (ORDER BY month) AS next_month_sales
+FROM monthly_sales
+ORDER BY month;
 
 
 ```
-![](/images/max.PNG)
+![](/images/lead().PNG)
 
-# 1. LAG() – Look at Previous Period
+Adds a column showing the sales of the next month.
+
+# 3. Growth % Calculation (Month-over-Month)
 ```sql
+-- Month-over-month growth percentage
+WITH monthly_sales AS (
+    SELECT 
+        FORMAT(sale_date, 'yyyy-MM') AS month,
+        SUM(amount) AS total_sales
+    FROM transactions
+    GROUP BY FORMAT(sale_date, 'yyyy-MM')
+)
+SELECT 
+    month,
+    total_sales,
+    LAG(total_sales, 1) OVER (ORDER BY month) AS prev_month_sales,
+    ROUND(
+        CASE 
+            WHEN LAG(total_sales, 1) OVER (ORDER BY month) = 0 THEN NULL
+            ELSE ( (total_sales - LAG(total_sales, 1) OVER (ORDER BY month)) * 100.0 / 
+                    LAG(total_sales, 1) OVER (ORDER BY month) )
+        END, 2
+    ) AS growth_percent
+FROM monthly_sales
+ORDER BY month;
 
 
 ```
-![](/images/max.PNG)
+![](/images/growth.PNG)
 
+Compares current month’s sales to the previous one.
 
+Positive % = growth 
 
+Negative % = decline 
 
+NULL = first month (no previous period).
 
+## 4. Distribution
 
+# 1. NTILE(4) – Quartile Segmentation
+
+```sql
+-- Divide customers into 4 quartiles by total spending
+SELECT 
+    c.name AS customer_name,
+    SUM(t.amount) AS total_spent,
+    NTILE(4) OVER (ORDER BY SUM(t.amount) DESC) AS spending_quartile
+FROM customers c
+JOIN transactions t ON c.customer_id = t.customer_id
+GROUP BY c.name
+ORDER BY total_spent DESC;
+
+```
+![](/images/nile().PNG)
+
+Customers are split into 4 quartiles (25% each).
+
+Quartile 1 = top spenders, Quartile 4 = lowest spenders.
+
+Helps marketing focus efforts differently per segment.
+
+# 2. CUME_DIST() – Cumulative Distribution
+
+```sql
+-- Cumulative distribution of customer spending
+SELECT 
+    c.name AS customer_name,
+    SUM(t.amount) AS total_spent,
+    CUME_DIST() OVER (ORDER BY SUM(t.amount) DESC) AS spending_cume_dist
+FROM customers c
+JOIN transactions t ON c.customer_id = t.customer_id
+GROUP BY c.name
+ORDER BY total_spent DESC;
+
+```
+![](/images/cm().PNG)
+
+Produces a value between 0 and 1 showing a customer’s relative spending position.
+
+Example: 0.8 means this customer spends more than 80% of others.
+
+Useful for percentile-based marketing (top 10%, bottom 20%, etc.).
 
 
 
