@@ -475,6 +475,39 @@ Example: 0.8 means this customer spends more than 80% of others.
 
 Useful for percentile-based marketing (top 10%, bottom 20%, etc.).
 
+## Results Analysis
+# 1. Descriptive – What happened?
+
+The top 5 customers across regions contributed the majority of revenue, showing a concentration of sales among a few high-value clients.
+
+Sales grew steadily from January to May 2025, with peak revenue in May.
+
+Month-over-month growth showed positive increases except for slight slowdowns in February.
+
+Customers fell into 4 quartiles, where Quartile 1 customers spent almost 3x more than Quartile 4 customers.
+
+# 2. Diagnostic – Why?
+
+High concentration of sales is due to strong repeat purchases from loyal distributors in Kigali and Huye.
+
+Growth in March–May correlates with seasonal beverage demand (hot weather → higher juice and water sales).
+
+February slowdown may be linked to supply chain delays or reduced consumer spending after holiday season.
+
+Quartile analysis reveals that marketing campaigns and discounts may have primarily reached higher-spending customers, leaving smaller buyers under-engaged.
+
+# 3. Prescriptive – What next?
+
+Focus on customer retention strategies for top 5 customers (loyalty rewards, volume discounts).
+
+Launch targeted promotions in Quartiles 3 and 4 to expand spending across a broader base.
+
+Strengthen inventory planning ahead of seasonal peaks (e.g., April–June demand surge).
+
+Monitor month-over-month sales more closely to anticipate and act quickly on slowdowns.
+
+Use moving averages to forecast future demand and guide procurement and transportation scheduling.
+
 ## References
 
 Oracle. (2025). Analytic Functions (Window Functions) Documentation. Oracle Docs.
