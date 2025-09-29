@@ -475,6 +475,36 @@ Example: 0.8 means this customer spends more than 80% of others.
 
 Useful for percentile-based marketing (top 10%, bottom 20%, etc.).
 
+## References
+
+Oracle. (2025). Analytic Functions (Window Functions) Documentation. Oracle Docs.
+https://docs.oracle.com/en/database/oracle/oracle-database/21/sqlrf/Analytic-Functions.html
+
+Microsoft. (2025). Window Functions (Transact-SQL). SQL Server Docs.
+https://learn.microsoft.com/en-us/sql/t-sql/queries/select-over-clause-transact-sql
+
+PostgreSQL Global Development Group. (2025). Window Functions. PostgreSQL Docs.
+https://www.postgresql.org/docs/current/tutorial-window.html
+
+IBM. (2024). DB2 SQL: Window Functions. IBM Knowledge Center.
+https://www.ibm.com/docs/en/db2
+
+Itzik Ben-Gan. (2020). T-SQL Window Functions. Microsoft Press. ISBN: 9781509304330.
+
+Mode Analytics. (2024). Introduction to Window Functions.
+https://mode.com/sql-tutorial/sql-window-functions/
+
+Redgate. (2023). How to Use SQL Server Window Functions. Redgate Hub.
+https://www.red-gate.com/simple-talk/sql
+
+GeeksforGeeks. (2024). SQL Window Functions – Explained with Examples.
+https://www.geeksforgeeks.org/sql-window-functions/
+
+DataCamp. (2025). Mastering SQL Window Functions.
+https://www.datacamp.com/tutorial/sql-window-functions
+
+Khan Academy. (2023). SQL: Window Functions Overview.
+https://www.khanacademy.org/computing/computer-programming/sql
 
 
 
